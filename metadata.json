@@ -1,0 +1,6 @@
+{
+  "name": "Smart Online Examination Portal",
+  "description": "An AI-powered online examination portal featuring robust browser and webcam cheating detection, automated grading, leaderboard ranks, and personalized skill recommendations based on exam performance.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
