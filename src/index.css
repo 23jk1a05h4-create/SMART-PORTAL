@@ -34,6 +34,15 @@
 }
 
 /* Theme Transition Utility */
+:root, .theme-light {
+  --bg-base: #f8fafc;
+  --bg-card: #ffffff;
+  --border-main: #e2e8f0;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-accent: #4f46e5;
+}
+
 .theme-transition {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }

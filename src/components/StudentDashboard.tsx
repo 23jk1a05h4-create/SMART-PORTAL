@@ -15,9 +15,10 @@ interface StudentDashboardProps {
   onUpdateUser?: (updatedUser: any) => void;
   theme?: string;
   onThemeChange?: (theme: string) => void;
+  onShowToast?: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
-export default function StudentDashboard({ token, user, onLogout, onStartExam, onUpdateUser, theme = 'light', onThemeChange }: StudentDashboardProps) {
+export default function StudentDashboard({ token, user, onLogout, onStartExam, onUpdateUser, theme = 'light', onThemeChange, onShowToast }: StudentDashboardProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'exams' | 'practice' | 'leaderboard' | 'discussions' | 'profile'>('overview');
   const [stats, setStats] = useState<any>(null);
   const [exams, setExams] = useState<Exam[]>([]);
@@ -269,7 +270,7 @@ export default function StudentDashboard({ token, user, onLogout, onStartExam, o
       if (res.ok) {
         const updatedUser = await res.json();
         setEditingProfile(false);
-        alert('Profile saved successfully!');
+        onShowToast?.('Profile saved successfully!', 'success');
         if (onUpdateUser) {
           onUpdateUser(updatedUser);
         }
@@ -984,7 +985,7 @@ export default function StudentDashboard({ token, user, onLogout, onStartExam, o
                               setPracticeSubmitted(false);
                               setPracticeResult(null);
                             } else {
-                              alert('Practice set completed! Resetting filters or select another topic.');
+                              onShowToast?.('Practice set completed! Resetting filters or select another topic.', 'info');
                             }
                           }}
                           className="py-1.5 px-5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold transition"

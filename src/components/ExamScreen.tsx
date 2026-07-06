@@ -10,9 +10,10 @@ interface ExamScreenProps {
   examId: string;
   onFinish: () => void;
   theme?: string;
+  onShowToast?: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
-export default function ExamScreen({ token, examId, onFinish, theme = 'light' }: ExamScreenProps) {
+export default function ExamScreen({ token, examId, onFinish, theme = 'light', onShowToast }: ExamScreenProps) {
   const [loading, setLoading] = useState(true);
   const [exam, setExam] = useState<Exam | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -60,7 +61,7 @@ export default function ExamScreen({ token, examId, onFinish, theme = 'light' }:
       setTimeLeft(data.exam.duration * 60);
       setLoading(false);
     } catch (e: any) {
-      alert(e.message || 'Error configuring exam environment.');
+      onShowToast?.(e.message || 'Error configuring exam environment.', 'error');
       onFinish();
     }
   };
@@ -268,11 +269,11 @@ export default function ExamScreen({ token, examId, onFinish, theme = 'light' }:
         setDiagnosticResult(data);
         setSubmitted(true);
       } else {
-        alert('Submission failed, please retry.');
+        onShowToast?.('Submission failed, please retry.', 'error');
       }
     } catch (e) {
       console.error(e);
-      alert('Error submitting final answers.');
+      onShowToast?.('Error submitting final answers.', 'error');
     } finally {
       setLoading(false);
     }
@@ -366,7 +367,7 @@ export default function ExamScreen({ token, examId, onFinish, theme = 'light' }:
                 <p className="text-xs text-amber-50">You scored {diagnosticResult.accuracy}%! An official skill verification certificate has been saved to your profile.</p>
               </div>
               <button
-                onClick={() => alert('Certificate available under "Profile & Certificates" tab on your student dashboard!')}
+                onClick={() => onShowToast?.('Certificate available under "Profile & Certificates" tab on your student dashboard!', 'info')}
                 className="py-1.5 px-4 bg-white text-amber-800 rounded-lg text-xs font-bold transition shadow-sm hover:bg-slate-50 shrink-0"
               >
                 View Digital Credential

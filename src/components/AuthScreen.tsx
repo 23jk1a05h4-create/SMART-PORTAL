@@ -3,9 +3,10 @@ import { Mail, Lock, User as UserIcon, BookOpen, Shield, GraduationCap, Sparkles
 
 interface AuthScreenProps {
   onLoginSuccess: (token: string, user: any) => void;
+  onShowToast?: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
-export default function AuthScreen({ onLoginSuccess }: AuthScreenProps) {
+export default function AuthScreen({ onLoginSuccess, onShowToast }: AuthScreenProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -179,7 +180,7 @@ export default function AuthScreen({ onLoginSuccess }: AuthScreenProps) {
                   {isLogin && (
                     <button 
                       type="button" 
-                      onClick={() => alert('Demo password: student123 or admin123. Use the quick buttons below!')}
+                      onClick={() => onShowToast?.('Demo passwords: student123 or admin123. Use the quick buttons below!', 'info')}
                       className="text-xs text-indigo-600 hover:underline"
                     >
                       Forgot?

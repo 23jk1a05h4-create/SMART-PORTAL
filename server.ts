@@ -299,6 +299,36 @@ async function startServer() {
     res.status(201).json(exam);
   });
 
+  // Bulk Import Exams
+  app.post('/api/admin/exams/bulk', authenticateToken, requireRole('admin'), (req, res) => {
+    const { exams } = req.body;
+    if (!Array.isArray(exams)) {
+      return res.status(400).json({ error: 'Invalid exams array format' });
+    }
+
+    const imported: Exam[] = [];
+    exams.forEach(ex => {
+      const exam: Exam = {
+        id: 'exam-' + Math.random().toString(36).substr(2, 9),
+        title: ex.title || ex.Title || ex.name || ex.Name,
+        description: ex.description || ex.Description || '',
+        topic: ex.topic || ex.Topic || 'General',
+        duration: Number(ex.duration || ex.Duration || 30),
+        negativeMarks: ex.negativeMarks !== undefined ? Number(ex.negativeMarks) : (ex.NegativeMarks !== undefined ? Number(ex.NegativeMarks) : 0.25),
+        published: ex.published === undefined ? (ex.Published === undefined ? false : !!ex.Published) : !!ex.published,
+        scheduledAt: ex.scheduledAt || ex.ScheduledAt || new Date().toISOString(),
+        difficulty: ex.difficulty || ex.Difficulty || 'Medium'
+      };
+      
+      if (exam.title) {
+        dbService.addExam(exam);
+        imported.push(exam);
+      }
+    });
+
+    res.status(201).json(imported);
+  });
+
   app.delete('/api/admin/exams/:examId', authenticateToken, requireRole('admin'), (req, res) => {
     dbService.deleteExam(req.params.examId);
     res.json({ success: true });
